@@ -3,6 +3,7 @@ from streamlit.connections import ExperimentalBaseConnection
 from streamlit.runtime.caching import cache_data
 import openai
 
+
 class OpenAIConnection(ExperimentalBaseConnection):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -20,18 +21,17 @@ class OpenAIConnection(ExperimentalBaseConnection):
         return openai
 
     def query(
-        self, query: str, model: str = "gpt-3.5-turbo", ttl: int = 3600, **kwargs
+        self, query: str, model: str = "gpt-3.5-turbo", messages=[{"role": "system", "content": "You are a helpful assistant"}], ttl: int = 3600, **kwargs
     ) -> dict:
         @cache_data(ttl=ttl)
-        def _query(query: str, model: str, **kwargs) -> dict:
+        def _query(query: str, model: str, messages: list, **kwargs) -> dict:
             response = openai.ChatCompletion.create(
                 model=model,
-                messages=[
-                    {"role": "system", "content": "You are a helpful assistant."},
-                    {"role": "user", "content": query},
-                ],
+                messages=messages + [{"role": "user", "content": query}],
             )
             self.total_tokens += response["usage"]["total_tokens"]
             return response
 
-        return _query(query, model, **kwargs)
+        return _query(query, model, messages, **kwargs)
+    
+
