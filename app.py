@@ -1,18 +1,23 @@
 import streamlit as st
 from openai_connection.connection import OpenAIConnection
 
-
 import streamlit as st
 
 with st.sidebar:
-    openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password")
+    openai_api_key = st.text_input(
+        "OpenAI API Key", key="chatbot_api_key", type="password"
+    )
 
 st.title("💬 Chatbot Demo")
 if "messages" not in st.session_state:
-    st.session_state["messages"] = [{"role": "assistant", "content": "How can I help you?"}]
+    st.session_state["messages"] = [
+        {"role": "assistant", "content": "How can I help you?"}
+    ]
 
 if openai_api_key:
-    conn = st.experimental_connection("openai", type=OpenAIConnection, api_key=openai_api_key)
+    conn = st.experimental_connection(
+        "openai", type=OpenAIConnection, api_key=openai_api_key
+    )
 
 for msg in st.session_state.messages:
     st.chat_message(msg["role"]).write(msg["content"])

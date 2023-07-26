@@ -21,7 +21,12 @@ class OpenAIConnection(ExperimentalBaseConnection):
         return openai
 
     def query(
-        self, query: str, model: str = "gpt-3.5-turbo", messages=[{"role": "system", "content": "You are a helpful assistant"}], ttl: int = 3600, **kwargs
+        self,
+        query: str,
+        model: str = "gpt-3.5-turbo",
+        messages=[{"role": "system", "content": "You are a helpful assistant"}],
+        ttl: int = 3600,
+        **kwargs
     ) -> dict:
         @cache_data(ttl=ttl)
         def _query(query: str, model: str, messages: list, **kwargs) -> dict:
@@ -33,5 +38,3 @@ class OpenAIConnection(ExperimentalBaseConnection):
             return response
 
         return _query(query, model, messages, **kwargs)
-    
-
