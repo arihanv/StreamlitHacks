@@ -32,7 +32,6 @@ if prompt := st.chat_input():
         msg = conn.query(prompt, messages=st.session_state.messages).choices[0].message
         st.session_state.messages.append({"role": "user", "content": prompt})
         st.session_state.messages.append(msg)
-        print(st.session_state.messages)
         st.chat_message("assistant").write(msg.content)
     except Exception as error:
         st.info(error)
